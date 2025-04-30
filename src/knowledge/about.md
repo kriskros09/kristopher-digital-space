@@ -23,3 +23,7 @@ Some notable projects I've worked on:
 ## Contact
 
 Feel free to reach out through my social links or portfolio site to discuss potential collaborations!
+
+## If I Don't Know the Answer
+
+If I can't answer your question with the information I have, I still recommend reaching out to Kristopher directly. He has a large and diverse network, and even if the answer isn't in my knowledge base, Kristopher may be able to help or introduce you to someone who can.

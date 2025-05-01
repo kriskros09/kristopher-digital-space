@@ -1,25 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState, KeyboardEvent, RefObject, ReactNode } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { RefObject } from "react";
 import {
-    ImageIcon,
-    FileUp,
-    Figma,
     MonitorIcon,
     CircleUserRound,
-    ArrowUpIcon,
-    Paperclip,
-    PlusIcon,
 } from "lucide-react";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
 import { ErrorBanner } from "./ErrorBanner";
 import { ActionButton } from "./ActionButton";
 import { useAiChat } from "@/hooks/useAiChat";
-import ReactMarkdown from "react-markdown";
-import { Loader } from "./Loader";
 
 export function AiChat() {
     const {
@@ -27,19 +17,16 @@ export function AiChat() {
         messages,
         loading,
         error,
-        voiceReady,
         welcomeLoading,
         isSpeaking,
         textareaRef,
         chatEndRef,
-        adjustHeight,
         handleInputFocus,
         handleKeyDown,
         handleSend,
         handleChange,
         toggleMessage,
         handleAbout,
-        aboutLinks,
         hasClickedAbout,
     } = useAiChat();
 
@@ -54,29 +41,6 @@ export function AiChat() {
                         toggleMessage={toggleMessage}
                         chatEndRef={chatEndRef as RefObject<HTMLDivElement>}
                     />
-                    {aboutLinks && (
-                        <div className="mt-4 flex flex-col items-center gap-2">
-                            {Object.entries(aboutLinks).map(([key, url]) => (
-                                <ReactMarkdown
-                                    key={key}
-                                    components={{
-                                        a: ({ children, ...props }) => (
-                                            <a
-                                                {...props}
-                                                className="text-blue-500 underline prose prose-invert text-center"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {children}
-                                            </a>
-                                        ),
-                                    }}
-                                >
-                                    {`[${key.charAt(0).toUpperCase() + key.slice(1)}](${url})`}
-                                </ReactMarkdown>
-                            ))}
-                        </div>
-                    )}
                     <ChatInput
                         value={value}
                         onChange={handleChange}

@@ -20,6 +20,6 @@ export async function POST(req: NextRequest) {
     const aiMessage = completion.choices[0]?.message?.content || "";
     return NextResponse.json({ aiMessage });
   } catch (error) {
-    return NextResponse.json({ error: "OpenAI request failed" }, { status: 500 });
+    return NextResponse.json({ error: "OpenAI request failed", details: error }, { status: 500 });
   }
 } 

@@ -34,6 +34,6 @@ export async function POST(req: NextRequest) {
     const audioUrl = `data:audio/mp3;base64,${base64Audio}`;
     return NextResponse.json({ audioUrl });
   } catch (err) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: "Server error", details: err }, { status: 500 });
   }
 } 

@@ -38,6 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const aiMessage = completion.choices[0]?.message?.content || "";
     res.status(200).json({ aiMessage });
   } catch (error) {
-    res.status(500).json({ error: "OpenAI request failed" });
+    res.status(500).json({ error: "OpenAI request failed", details: error });
   }
 } 

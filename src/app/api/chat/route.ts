@@ -1,10 +1,9 @@
-import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS } from "@/constants/aiPrompts";
+import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS } from "@/constants/aiPrompts";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { promises as fs } from "fs";
 import path from "path";
-
-const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information.";
+import { SYSTEM_PROMPT } from "@/constants/aiPrompts";
 
 let cachedKnowledge: string | null = null;
 async function getKnowledge() {
@@ -40,6 +39,26 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing OpenAI API key" }, { status: 500 });
+    }
+
+    const lowerMsg = (message || "").toLowerCase();
+    const isContactQuestion = CONTACT_KEYWORDS.some(k => lowerMsg.includes(k));
+
+    if (isContactQuestion) {
+      // Return special contact-info message
+      const linksPath = path.join(process.cwd(), "src/knowledge/links.json");
+      const linksRaw = await fs.readFile(linksPath, "utf-8");
+      const links = JSON.parse(linksRaw);
+      return NextResponse.json({
+        aiMessage: null,
+        type: "contact-info",
+        contacts: [
+          { name: "LinkedIn", url: links.linkedin },
+          { name: "GitHub", url: links.github },
+          { name: "Portfolio", url: links.portfolio }
+        ],
+        audioUrl: null
+      });
     }
 
     // 1. Get AI response (skip for welcome)
@@ -91,6 +110,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ aiMessage, audioUrl });
   } catch (err) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: "Server error", details: err }, { status: 500 });
   }
 } 

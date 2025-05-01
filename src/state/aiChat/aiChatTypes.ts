@@ -2,6 +2,8 @@ export interface ChatMessage {
   sender: "user" | "ai";
   text: string;
   isExpanded?: boolean;
+  type?: string;
+  contacts?: { name: string; url: string }[];
 }
 
 export interface AiChatState {

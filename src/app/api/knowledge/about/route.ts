@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const aboutPath = path.join(process.cwd(), "src/knowledge/about.md");
     const linksPath = path.join(process.cwd(), "src/knowledge/links.json");
@@ -15,6 +15,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ about, links });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to load knowledge files." }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load knowledge files.", details: error }, { status: 500 });
   }
 } 

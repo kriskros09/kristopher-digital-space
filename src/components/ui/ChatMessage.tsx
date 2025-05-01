@@ -1,7 +1,7 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import { Loader } from "./Loader";
 import ReactMarkdown from "react-markdown";
+import { ContactIcons } from "./ContactIcons";
 
 export interface ChatMessageProps {
   msg: {
@@ -9,6 +9,7 @@ export interface ChatMessageProps {
     text: string;
     isExpanded?: boolean;
     type?: string;
+    contacts?: { name: string; url: string }[];
   };
   isMostRecentMessage: boolean;
   isSpeaking: boolean;
@@ -17,11 +18,21 @@ export interface ChatMessageProps {
   index: number;
 }
 
-export function ChatMessage({ msg, isMostRecentMessage, isSpeaking, isLoader, onToggle, index }: ChatMessageProps) {
+export function ChatMessage({ msg, isSpeaking, isLoader, onToggle }: ChatMessageProps) {
   if (isLoader) {
     return (
       <div className="flex items-start">
         <Loader variant={isSpeaking ? "dots" : "spinner"} text={isSpeaking ? "AI is speaking..." : "Thinking..."} />
+      </div>
+    );
+  }
+  if (msg.type === "contact-info" && msg.contacts) {
+    return (
+      <div className="flex items-start">
+        <div className="inline-block px-3 py-4 rounded-lg max-w-[80%] bg-gray-800 text-gray-100 flex flex-col items-center">
+          <div className="mb-2 text-center text-base font-medium">You can contact Kristopher via</div>
+          <ContactIcons contacts={msg.contacts} />
+        </div>
       </div>
     );
   }

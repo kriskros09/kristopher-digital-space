@@ -1,16 +1,13 @@
 import { useReducer, useRef, useCallback, useEffect, useState, KeyboardEvent, ChangeEvent } from "react";
 import { aiChatReducer, initialAiChatState } from "@/state/aiChat/aiChatReducer";
-import { AiChatState, AiChatAction, ChatMessage } from "@/state/aiChat/aiChatTypes";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
-import { AI_VOICE_GREETING_INSTRUCTIONS } from "@/constants/aiPrompts";
+import { AI_VOICE_GREETING_INSTRUCTIONS, SYSTEM_PROMPT } from "@/constants/aiPrompts";
 
-const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information.";
 
 export function useAiChat() {
   const [state, dispatch] = useReducer(aiChatReducer, initialAiChatState);
   const { textareaRef, adjustHeight } = useAutoResizeTextarea();
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const [aboutLinks, setAboutLinks] = useState<{ [key: string]: string } | null>(null);
   const [hasClickedAbout, setHasClickedAbout] = useState(false);
 
   // Scroll to bottom on messages/loader change
@@ -22,42 +19,13 @@ export function useAiChat() {
     scrollToEnd();
   }, [state.messages, state.loading, state.welcomeLoading, scrollToEnd]);
 
-  // OpenAI call for About
-  const sendAboutToOpenAI = useCallback(async (about: string) => {
-    dispatch({ type: "SET_LOADING", loading: true });
-    dispatch({ type: "SET_ERROR", error: null });
-    dispatch({ type: "ADD_MESSAGE", message: { sender: "user", text: "Tell me about Kristopher." } });
-    try {
-      const res = await fetch("/api/openai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemPrompt: SYSTEM_PROMPT,
-          userPrompt: about,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && data.aiMessage) {
-        dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: data.aiMessage, isExpanded: false } });
-      } else {
-        dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: "Sorry, no response from AI.", isExpanded: false } });
-        dispatch({ type: "SET_ERROR", error: data.error || "Unknown error" });
-      }
-    } catch (err) {
-      dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: "Error contacting AI.", isExpanded: false } });
-      dispatch({ type: "SET_ERROR", error: "Network error" });
-    }
-    dispatch({ type: "SET_LOADING", loading: false });
-  }, []);
-
   // Handler for About button
   const handleAbout = useCallback(async () => {
     setHasClickedAbout(true);
-    setAboutLinks(null);
     dispatch({ type: "SET_LOADING", loading: true });
     dispatch({ type: "SET_ERROR", error: null });
     const res = await fetch("/api/knowledge/about");
-    const { about, links } = await res.json();
+    const { about } = await res.json();
 
     // Always ask the same question, provide about.md and links as context
     const systemPromptWithKnowledge = `${SYSTEM_PROMPT}\n\n${about}`;
@@ -72,8 +40,7 @@ export function useAiChat() {
     const aiData = await aiRes.json();
     if (aiRes.ok && aiData.aiMessage) {
       dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: aiData.aiMessage, isExpanded: false } });
-      // Trigger TTS for the AI's message using the new /api/tts endpoint
-      dispatch({ type: "SET_IS_SPEAKING", isSpeaking: true });
+      // Fetch TTS, but only set isSpeaking when audio actually starts
       const ttsRes = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,20 +49,34 @@ export function useAiChat() {
       const ttsData = await ttsRes.json();
       if (ttsRes.ok && ttsData.audioUrl) {
         const audio = new Audio(ttsData.audioUrl);
+        let fallbackTimeout: ReturnType<typeof setTimeout> | null = null;
+
+        audio.onplay = () => dispatch({ type: "SET_IS_SPEAKING", isSpeaking: true });
+        audio.onended = () => {
+          dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false });
+          dispatch({ type: "SET_LOADING", loading: false });
+          if (fallbackTimeout) clearTimeout(fallbackTimeout);
+        };
         audio.play();
-        audio.onended = () => dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false });
-        // Fallback: ensure isSpeaking is false after 15s if audio fails
-        setTimeout(() => dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false }), 15000);
+
+        // Use audio duration if available, otherwise fallback to 30s
+        audio.onloadedmetadata = () => {
+          const duration = audio.duration && isFinite(audio.duration) ? audio.duration : 30;
+          fallbackTimeout = setTimeout(() => {
+            dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false });
+            dispatch({ type: "SET_LOADING", loading: false });
+          }, (duration + 2) * 1000); // 2s buffer
+        };
       } else {
         dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false });
+        dispatch({ type: "SET_LOADING", loading: false });
       }
     } else {
       dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: "Sorry, no response from AI.", isExpanded: false } });
       dispatch({ type: "SET_ERROR", error: aiData.error || "Unknown error" });
       dispatch({ type: "SET_IS_SPEAKING", isSpeaking: false });
+      dispatch({ type: "SET_LOADING", loading: false });
     }
-    setAboutLinks(links);
-    dispatch({ type: "SET_LOADING", loading: false });
   }, []);
 
   // Handlers
@@ -131,7 +112,9 @@ export function useAiChat() {
         body: JSON.stringify({ message: userMessage, tts: true }),
       });
       const data = await res.json();
-      if (res.ok && data.aiMessage) {
+      if (res.ok && data.type === "contact-info" && data.contacts) {
+        dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: "", type: "contact-info", contacts: data.contacts, isExpanded: true } });
+      } else if (res.ok && data.aiMessage) {
         dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: data.aiMessage, isExpanded: false } });
         if (data.audioUrl) {
           dispatch({ type: "SET_IS_SPEAKING", isSpeaking: true });
@@ -145,7 +128,7 @@ export function useAiChat() {
       }
     } catch (err) {
       dispatch({ type: "ADD_MESSAGE", message: { sender: "ai", text: "Error contacting AI.", isExpanded: false } });
-      dispatch({ type: "SET_ERROR", error: "Network error" });
+      dispatch({ type: "SET_ERROR", error: `Network error: ${err}` });
     }
     dispatch({ type: "SET_LOADING", loading: false });
   }, []);
@@ -190,7 +173,6 @@ export function useAiChat() {
     toggleMessage,
     scrollToEnd,
     handleAbout,
-    aboutLinks,
     hasClickedAbout,
   };
 } 

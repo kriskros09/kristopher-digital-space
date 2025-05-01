@@ -1,6 +1,5 @@
 import React from "react";
 import { ChatMessage } from "./ChatMessage";
-import { Loader } from "./Loader";
 
 export interface ChatMessageListProps {
   messages: {
@@ -8,6 +7,7 @@ export interface ChatMessageListProps {
     text: string;
     isExpanded?: boolean;
     type?: string;
+    contacts?: { name: string; url: string }[];
   }[];
   isSpeaking: boolean;
   loading: boolean;

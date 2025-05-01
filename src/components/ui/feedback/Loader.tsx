@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Loader({
   text = "Thinking...",
   variant = "spinner",

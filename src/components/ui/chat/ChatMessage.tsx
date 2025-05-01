@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Loader } from "./Loader";
+import { Loader } from "../feedback/Loader";
 import ReactMarkdown from "react-markdown";
-import { ContactIcons } from "./ContactIcons";
+import { ContactIcons } from "../buttons/ContactIcons";
 
 export interface ChatMessageProps {
   msg: {
@@ -26,7 +26,9 @@ export function ChatMessage({ msg, isSpeaking, isLoader, onToggle }: ChatMessage
       </div>
     );
   }
+  console.log("msg.type out", msg.type);
   if (msg.type === "contact-info" && msg.contacts) {
+    console.log("msg.type in", msg.type);
     return (
       <div className="flex items-start">
         <div className="inline-block px-3 py-4 rounded-lg max-w-[80%] bg-gray-800 text-gray-100 flex flex-col items-center">

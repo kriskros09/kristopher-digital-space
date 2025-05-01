@@ -1,5 +1,5 @@
 "use client";
-import { AiChat } from "@/components/ui/AiChat";
+import { AiChat } from "@/components/ui/chat/AiChat";
 
 export default function Home() {
   return (

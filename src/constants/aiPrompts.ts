@@ -8,23 +8,25 @@ export const AI_VOICE_GREETING_INSTRUCTIONS = "Hey! I’m your virtual guide to 
 export const CONTACT_KEYWORDS = [
   "contact",
   "reach you",
+  "reach out",
   "reach him",
   "reach kristopher",
   "get in touch",
   "how can i talk",
-      "how can i message",
-      "how can i email",
-      "how can i connect",
-      "collaborate",
-      "collaboration",
-      "work together",
-      "partner",
-      "partnership",
-      "team up",
-      "join forces",
-      "cooperate",
-      "project together"
+  "how can i message",
+  "how can i email",
+  "how can i connect",
+  "how can i collaborate",
+  "collaborate",
+  "work together",
+  "collaboration",
+  "partnership",
+  "partner",
+  "join forces",
+  "team up",
+  "project together",
+  "cooperate",
 ];
     
 
-export const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information.";
+export const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information. If you don't know the answer, say so. Take the user's input and correct it if it's not grammatically correct.";

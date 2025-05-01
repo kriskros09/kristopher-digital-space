@@ -1,4 +1,4 @@
-import React from "react";
+import { RefObject } from "react";
 import { ChatMessage } from "./ChatMessage";
 
 export interface ChatMessageListProps {
@@ -12,7 +12,7 @@ export interface ChatMessageListProps {
   isSpeaking: boolean;
   loading: boolean;
   toggleMessage: (index: number) => void;
-  chatEndRef: React.RefObject<HTMLDivElement>;
+  chatEndRef: RefObject<HTMLDivElement>;
 }
 
 export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, chatEndRef }: ChatMessageListProps) {
@@ -23,7 +23,7 @@ export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, 
     : messages;
 
   return (
-    <div className="h-64 overflow-y-auto p-4 flex flex-col gap-2">
+    <div className="h-120 overflow-y-auto p-4 flex flex-col gap-2">
       {allMessages.map((msg, i) => (
         <ChatMessage
           key={i}

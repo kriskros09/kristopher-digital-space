@@ -7,8 +7,8 @@ import {
 } from "lucide-react";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
-import { ErrorBanner } from "./ErrorBanner";
-import { ActionButton } from "./ActionButton";
+import { ErrorBanner } from "@/components/ui/feedback/ErrorBanner";
+import { ActionButton } from "@/components/ui/buttons/ActionButton";
 import { useAiChat } from "@/hooks/useAiChat";
 
 export function AiChat() {

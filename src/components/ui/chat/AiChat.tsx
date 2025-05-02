@@ -31,9 +31,9 @@ export function AiChat() {
     } = useAiChat();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen w-full max-w-4xl mx-auto p-4 space-y-8">
-            <div className="w-full mb-4">
-                <div className="relative bg-neutral-900 rounded-sm border border-neutral-800">
+        <div className="absolute min-h-screen w-full p-4 space-y-8">
+            <div className="w-full mx-auto my-4">
+                <div className="relative addGlassmorphism rounded-sm">
                     <ChatMessageList
                         messages={messages}
                         isSpeaking={isSpeaking}

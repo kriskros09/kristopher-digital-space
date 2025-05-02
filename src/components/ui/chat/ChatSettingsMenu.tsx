@@ -47,11 +47,11 @@ export function ChatSettingsMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-neutral-900 gradient-border">
           <DialogHeader>
-            <DialogTitle>Clear chat history?</DialogTitle>
+            <DialogTitle className="text-white">Clear chat history?</DialogTitle>
           </DialogHeader>
-          <div className="py-2 text-sm text-zinc-400">
+          <div className="py-2 text-sm text-white">
             This will clear your chat history. Are you sure?
           </div>
           <DialogFooter>

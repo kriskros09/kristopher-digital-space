@@ -12,11 +12,11 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-// Only persist the messages array in aiChat
+// Only persist the messages array and hasVisited flag in aiChat
 const aiChatPersistConfig = {
   key: 'aiChat',
   storage,
-  whitelist: ['messages'],
+  whitelist: ['messages', 'hasVisited'],
 };
 
 const rootReducer = combineReducers({

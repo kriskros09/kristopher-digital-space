@@ -1,0 +1,90 @@
+[
+  {
+    "name": "AI Chatbot Platform",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+    "description": "Conversational AI platform using OpenAI, LangChain, and Next.js.",
+    "stack": [
+      "Next.js",
+      "OpenAI",
+      "LangChain",
+      "Redux Toolkit"
+    ],
+    "role": "Fullstack Developer",
+    "slug": "ai-chatbot-platform"
+  },
+  {
+    "name": "E-commerce Store",
+    "image": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80",
+    "description": "Modern e-commerce site with Stripe integration and custom CMS.",
+    "stack": [
+      "Next.js",
+      "Stripe",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "role": "Frontend Lead",
+    "slug": "ecommerce-store"
+  },
+  {
+    "name": "Realtime Collaboration App",
+    "image": "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+    "description": "Live document editing and chat with WebSocket and CRDTs.",
+    "stack": [
+      "React",
+      "Node.js",
+      "WebSocket",
+      "CRDT"
+    ],
+    "role": "Fullstack Engineer",
+    "slug": "realtime-collab-app"
+  },
+  {
+    "name": "Personal Portfolio",
+    "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
+    "description": "Responsive portfolio site with blog, projects, and contact form.",
+    "stack": [
+      "Next.js",
+      "Tailwind CSS",
+      "Vercel"
+    ],
+    "role": "Designer & Developer",
+    "slug": "personal-portfolio"
+  },
+  {
+    "name": "Task Manager SaaS",
+    "image": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+    "description": "Multi-tenant SaaS for team task management and collaboration.",
+    "stack": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Docker"
+    ],
+    "role": "Backend Lead",
+    "slug": "task-manager-saas"
+  },
+  {
+    "name": "Fitness Tracker App",
+    "image": "https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?auto=format&fit=crop&w=800&q=80",
+    "description": "Mobile-friendly app for tracking workouts, nutrition, and progress.",
+    "stack": [
+      "React Native",
+      "Expo",
+      "Firebase"
+    ],
+    "role": "Mobile Developer",
+    "slug": "fitness-tracker-app"
+  },
+  {
+    "name": "Crypto Dashboard",
+    "image": "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+    "description": "Real-time crypto price dashboard with charting and alerts.",
+    "stack": [
+      "Next.js",
+      "WebSocket",
+      "Chart.js"
+    ],
+    "role": "Frontend Engineer",
+    "slug": "crypto-dashboard"
+  }
+]

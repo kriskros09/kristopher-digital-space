@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 import { Loader } from "../feedback/Loader";
 import ReactMarkdown from "react-markdown";
 import { ContactIcons } from "../buttons/ContactIcons";
+import { ProjectSlider } from "../project/ProjectSlider";
+import { Project } from "@/features/aiChat/aiChatSlice";
 
 export interface ChatMessageProps {
   msg: {
@@ -10,6 +12,7 @@ export interface ChatMessageProps {
     isExpanded?: boolean;
     type?: string;
     contacts?: { name: string; url: string }[];
+    projects?: Project[];
   };
   isMostRecentMessage: boolean;
   isSpeaking: boolean;
@@ -37,6 +40,17 @@ export function ChatMessage({ msg, isSpeaking, isLoader, onToggle }: ChatMessage
       </div>
     );
   }
+
+  if (msg.type === "project-list" && msg.projects && msg.projects.length > 0) {
+    return (
+      <div className="flex flex-col items-start w-full">
+        <div className="inline-block px-3 py-4 rounded-lg max-w-[100%] text-white flex flex-col items-center w-full">
+          <ProjectSlider projects={msg.projects} />
+        </div>
+      </div>
+    );
+  }
+
   if (msg.sender === "user") {
     return (
       <div className="text-right">

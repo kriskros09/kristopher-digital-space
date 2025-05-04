@@ -1,5 +1,6 @@
 import { RefObject } from "react";
 import { ChatMessage } from "./ChatMessage";
+import { Project } from "@/features/aiChat/aiChatSlice";
 
 export interface ChatMessageListProps {
   messages: {
@@ -8,6 +9,7 @@ export interface ChatMessageListProps {
     isExpanded?: boolean;
     type?: string;
     contacts?: { name: string; url: string }[];
+    project?: Project;
   }[];
   isSpeaking: boolean;
   loading: boolean;
@@ -23,7 +25,7 @@ export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, 
     : messages;
 
   return (
-    <div className="h-120 overflow-y-auto p-4 flex flex-col gap-2">
+    <div className="overflow-y-scroll p-4 flex flex-col gap-2 h-[470px] lg:h-[600px] xl:h-[500px] 2xl:h-[700px]">
       {allMessages.map((msg, i) => (
         <ChatMessage
           key={i}

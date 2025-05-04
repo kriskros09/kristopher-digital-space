@@ -28,12 +28,13 @@ export function AiChat() {
         toggleMessage,
         handleAbout,
         hasClickedAbout,
+        handleProjects,
+        hasClickedProjects,
     } = useAiChat();
 
     return (
-        <div className="absolute min-h-screen w-full p-4 space-y-8">
-            <div className="w-full mx-auto my-4">
-                <div className="relative addGlassmorphism rounded-sm">
+        <div className="absolute w-full p-4 space-y-8">
+                <div className="addGlassmorphism rounded-sm">
                     <ChatMessageList
                         messages={messages}
                         isSpeaking={isSpeaking}
@@ -54,9 +55,8 @@ export function AiChat() {
                     />
                     <ErrorBanner error={error} />
                 </div>
-            </div>
             <div className="flex gap-4 mb-4">
-                <ActionButton icon={<MonitorIcon className="w-5 h-5" />} label="Projects" />
+                <ActionButton icon={<MonitorIcon className="w-5 h-5" />} label="Projects" onClick={handleProjects} disabled={hasClickedProjects} />
                 <ActionButton icon={<CircleUserRound className="w-5 h-5" />} label="About Me" onClick={handleAbout} disabled={hasClickedAbout} />
             </div>
         </div>

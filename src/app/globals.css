@@ -232,3 +232,13 @@ backdrop-filter: blur( 4px );
     linear-gradient(45deg, #ff6ec4, #7873f5, #4ade80) border-box;
 }
 
+/* Global scrollbar base */
+.project-slider::-webkit-scrollbar {
+  height: 10px;
+}
+
+.project-slider::-webkit-scrollbar-thumb {
+   background: linear-gradient(45deg, #4ade80, #7873f5, #ff6ec4);
+  border-radius: 50px;
+}
+

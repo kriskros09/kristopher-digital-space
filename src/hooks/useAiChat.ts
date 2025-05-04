@@ -11,9 +11,11 @@ import {
   setIsSpeaking,
   toggleMessage as toggleMessageAction,
   resetValue,
+  setHasVisited,
 } from "@/features/aiChat/aiChatSlice";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import { AI_VOICE_GREETING_INSTRUCTIONS, SYSTEM_PROMPT } from "@/constants/aiPrompts";
+import projects from "@/knowledge/projects.json";
 
 export function useAiChat() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +23,7 @@ export function useAiChat() {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea();
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [hasClickedAbout, setHasClickedAbout] = useState(false);
+  const [hasClickedProjects, setHasClickedProjects] = useState(false);
 
   // Scroll to bottom on messages/loader change
   const scrollToEnd = useCallback(() => {
@@ -91,9 +94,21 @@ export function useAiChat() {
     }
   }, [dispatch]);
 
+  // Handler for Projects button
+  const handleProjects = useCallback(() => {
+    setHasClickedProjects(true);
+    dispatch(addMessage({
+      sender: "ai",
+      text: "",
+      type: "project-list",
+      projects,
+      isExpanded: true,
+    }));
+  }, [dispatch]);
+
   // Handlers
   const handleInputFocus = useCallback(async () => {
-    if (!state.voiceReady) {
+    if (!state.voiceReady && !state.hasVisited) {
       dispatch(setVoiceReady(true));
       dispatch(setWelcomeLoading(true));
       dispatch(setIsSpeaking(true));
@@ -110,8 +125,9 @@ export function useAiChat() {
         audio.onended = () => dispatch(setIsSpeaking(false));
       }
       dispatch(setWelcomeLoading(false));
+      dispatch(setHasVisited(true));
     }
-  }, [state.voiceReady, dispatch]);
+  }, [state.voiceReady, dispatch, state.hasVisited]);
 
   const sendMessage = useCallback(async (userMessage: string) => {
     dispatch(setLoading(true));
@@ -126,6 +142,8 @@ export function useAiChat() {
       const data = await res.json();
       if (res.ok && data.type === "contact-info" && data.contacts) {
         dispatch(addMessage({ sender: "ai", text: "", type: "contact-info", contacts: data.contacts, isExpanded: true }));
+      } else if (res.ok && data.type === "project-list" && data.projects) {
+        dispatch(addMessage({ sender: "ai", text: "", type: "project-list", projects: data.projects, isExpanded: true }));
       } else if (res.ok && data.aiMessage) {
         dispatch(addMessage({ sender: "ai", text: data.aiMessage, isExpanded: false }));
         if (data.audioUrl) {
@@ -186,5 +204,7 @@ export function useAiChat() {
     scrollToEnd,
     handleAbout,
     hasClickedAbout,
+    handleProjects,
+    hasClickedProjects,
   };
 } 

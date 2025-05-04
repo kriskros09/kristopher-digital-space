@@ -1,11 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface Project {
+  name: string;
+  image: string;
+  description: string;
+  stack: string[];
+  role: string;
+  slug: string;
+}
+
 export interface ChatMessage {
   sender: 'user' | 'ai';
   text: string;
   isExpanded?: boolean;
   type?: string;
   contacts?: { name: string; url: string }[];
+  projects?: Project[];
 }
 
 export interface AiChatState {
@@ -16,6 +26,7 @@ export interface AiChatState {
   voiceReady: boolean;
   welcomeLoading: boolean;
   isSpeaking: boolean;
+  hasVisited: boolean;
 }
 
 const initialState: AiChatState = {
@@ -26,6 +37,7 @@ const initialState: AiChatState = {
   voiceReady: false,
   welcomeLoading: false,
   isSpeaking: false,
+  hasVisited: false,
 };
 
 const aiChatSlice = createSlice({
@@ -68,6 +80,9 @@ const aiChatSlice = createSlice({
     clearMessages(state) {
       state.messages = [];
     },
+    setHasVisited(state, action: PayloadAction<boolean>) {
+      state.hasVisited = action.payload;
+    },
   },
 });
 
@@ -83,6 +98,7 @@ export const {
   resetValue,
   setMessages,
   clearMessages,
+  setHasVisited,
 } = aiChatSlice.actions;
 
 export default aiChatSlice.reducer; 

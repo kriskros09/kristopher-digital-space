@@ -1,4 +1,4 @@
-import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS } from "@/constants/aiPrompts";
+import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS, PROJECT_KEYWORDS } from "@/constants/aiPrompts";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { promises as fs } from "fs";
@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
 
     const lowerMsg = (message || "").toLowerCase();
     const isContactQuestion = CONTACT_KEYWORDS.some(k => lowerMsg.includes(k));
+    const isProjectQuestion = PROJECT_KEYWORDS.some(k => lowerMsg.includes(k));
 
     if (isContactQuestion) {
       // Return special contact-info message
@@ -59,6 +60,23 @@ export async function POST(req: NextRequest) {
         ],
         audioUrl: null
       });
+    }
+
+    if (isProjectQuestion) {
+      // Return special project-list message
+      try {
+        const projectsPath = path.join(process.cwd(), "src/knowledge/projects.json");
+        const projectsRaw = await fs.readFile(projectsPath, "utf-8");
+        const projects = JSON.parse(projectsRaw);
+        return NextResponse.json({
+          aiMessage: null,
+          type: "project-list",
+          projects,
+          audioUrl: null
+        });
+      } catch (err) {
+        return NextResponse.json({ error: "Failed to load projects", details: err }, { status: 500 });
+      }
     }
 
     // 1. Get AI response (skip for welcome)

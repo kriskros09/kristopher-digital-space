@@ -44,7 +44,7 @@ export function ChatMessage({ msg, isSpeaking, isLoader, onToggle }: ChatMessage
   if (msg.type === "project-list" && msg.projects && msg.projects.length > 0) {
     return (
       <div className="flex flex-col items-start w-full">
-        <div className="inline-block px-3 py-4 rounded-lg max-w-[100%] text-white flex flex-col items-center w-full">
+        <div className="inline-block py-4 rounded-lg max-w-[100%] text-white flex flex-col items-center w-full">
           <ProjectSlider projects={msg.projects} />
         </div>
       </div>

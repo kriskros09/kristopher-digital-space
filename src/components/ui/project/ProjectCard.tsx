@@ -9,7 +9,6 @@ interface ProjectCardProps {
 
 export const ProjectCard = React.memo(function ProjectCard({ project }: ProjectCardProps) {
   const router = useRouter();
-  console.log(project.image);
   const handleMoreDetails = () => {
     router.push(`/projects/${project.slug}`);
   };

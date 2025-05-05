@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AI_VOICE_INSTRUCTIONS } from "@/constants/aiPrompts";
+import { AI_VOICE_INSTRUCTIONS } from "@/server/constants/aiPrompts";
 
 export async function POST(req: NextRequest) {
   try {

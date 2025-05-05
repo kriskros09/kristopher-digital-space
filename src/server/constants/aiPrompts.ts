@@ -3,7 +3,6 @@ export const AI_VOICE_INSTRUCTIONS = "Voice Affect: Calm, composed, and reassuri
 export const AI_VOICE_GREETING_INSTRUCTIONS = "Hey! I'm your virtual guide to Kristopher's world — from code to creativity. What would you like to explore?"
   ;
 
-
 // Detect contact questions (simple keyword match)
 export const CONTACT_KEYWORDS = [
   "contact",
@@ -32,18 +31,10 @@ export const CONTACT_KEYWORDS = [
 export const PROJECT_KEYWORDS = [
   "project",
   "projects",
-  "work",
   "portfolio",
   "case study",
   "case studies",
-  "companies",
-  "clients",
-  "experience",
   "my work",
-  "side project",
-  "side projects",
-  "apps",
-  "applications",
   "software",
   "what have you built",
   "what did you build",
@@ -54,4 +45,4 @@ export const PROJECT_KEYWORDS = [
   "show me your portfolio",
 ];
 
-export const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information. If you don't know the answer, say so. Take the user's input and correct it if it's not grammatically correct.";
+export const SYSTEM_PROMPT = "You may only answer questions about Kristopher using the information provided in the following knowledge files. Do not make up information. If you don't know the answer, say so. Take the user's input and correct it if it's not grammatically correct."; 

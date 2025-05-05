@@ -1,4 +1,4 @@
-import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS, PROJECT_KEYWORDS, SYSTEM_PROMPT } from "@/constants/aiPrompts";
+import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS, PROJECT_KEYWORDS, SYSTEM_PROMPT } from "@/server/constants/aiPrompts";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getKnowledge } from "@/lib/knowledge";

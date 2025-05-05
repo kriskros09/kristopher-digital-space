@@ -1,42 +1,24 @@
-import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS, PROJECT_KEYWORDS } from "@/constants/aiPrompts";
+import { AI_VOICE_GREETING_INSTRUCTIONS, AI_VOICE_INSTRUCTIONS, CONTACT_KEYWORDS, PROJECT_KEYWORDS, SYSTEM_PROMPT } from "@/constants/aiPrompts";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { promises as fs } from "fs";
-import path from "path";
-import { SYSTEM_PROMPT } from "@/constants/aiPrompts";
-
-let cachedKnowledge: string | null = null;
-async function getKnowledge() {
-  if (cachedKnowledge) return cachedKnowledge;
-  const aboutPath = path.join(process.cwd(), "src/knowledge/about.md");
-  const linksPath = path.join(process.cwd(), "src/knowledge/links.json");
-  const [about, linksRaw] = await Promise.all([
-    fs.readFile(aboutPath, "utf-8"),
-    fs.readFile(linksPath, "utf-8"),
-  ]);
-  const links = JSON.parse(linksRaw);
-  const linksMarkdown = Object.entries(links)
-    .map(([key, url]) => `- [${key.charAt(0).toUpperCase() + key.slice(1)}](${url})`)
-    .join("\n");
-  cachedKnowledge = `${about}\n\n## Links\n${linksMarkdown}`;
-  return cachedKnowledge;
-}
+import { getKnowledge } from "@/lib/knowledge";
+import { getProjects } from "@/lib/projects";
+import { chatRequestSchema } from "@/lib/validation";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY_PRIVATE,
 });
 
 export async function POST(req: NextRequest) {
   try {
-    const { message, tts } = await req.json();
-    // Allow empty message only for tts === 'welcome'
-    if (tts === "welcome") {
-      // proceed, no validation needed
-    } else if (!message || typeof message !== "string") {
-      return NextResponse.json({ error: "Invalid message" }, { status: 400 });
+    const body = await req.json();
+    const parseResult = chatRequestSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid request", details: parseResult.error }, { status: 400 });
     }
+    const { message, tts } = parseResult.data;
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY_PRIVATE;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing OpenAI API key" }, { status: 500 });
     }
@@ -46,10 +28,7 @@ export async function POST(req: NextRequest) {
     const isProjectQuestion = PROJECT_KEYWORDS.some(k => lowerMsg.includes(k));
 
     if (isContactQuestion) {
-      // Return special contact-info message
-      const linksPath = path.join(process.cwd(), "src/knowledge/links.json");
-      const linksRaw = await fs.readFile(linksPath, "utf-8");
-      const links = JSON.parse(linksRaw);
+      const { links } = await getKnowledge();
       return NextResponse.json({
         aiMessage: null,
         type: "contact-info",
@@ -65,9 +44,7 @@ export async function POST(req: NextRequest) {
     if (isProjectQuestion) {
       // Return special project-list message
       try {
-        const projectsPath = path.join(process.cwd(), "src/knowledge/projects.json");
-        const projectsRaw = await fs.readFile(projectsPath, "utf-8");
-        const projects = JSON.parse(projectsRaw);
+        const projects = await getProjects();
         return NextResponse.json({
           aiMessage: null,
           type: "project-list",
@@ -85,13 +62,13 @@ export async function POST(req: NextRequest) {
       // No AI message needed for welcome
     } else {
       // Always use Kristopher SYSTEM_PROMPT and knowledge
-      const knowledge = await getKnowledge();
+      const { markdown } = await getKnowledge();
       const openaiRes = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: knowledge },
-          { role: "user", content: message },
+          { role: "user", content: markdown },
+          { role: "user", content: message || "" },
         ],
         max_tokens: 256,
         temperature: 0.7,
@@ -104,7 +81,7 @@ export async function POST(req: NextRequest) {
     if (tts) {
       const ttsInput = tts === "welcome" ? AI_VOICE_GREETING_INSTRUCTIONS : aiMessage;
       const ttsInstructions = AI_VOICE_INSTRUCTIONS;
-      const ttsRes = await fetch("https://api.openai.com/v1/audio/speech", {
+      const ttsRes = await fetch(`${process.env.OPENAI_API_URL}/v1/audio/speech`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

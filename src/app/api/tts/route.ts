@@ -7,11 +7,11 @@ export async function POST(req: NextRequest) {
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Missing or invalid text" }, { status: 400 });
     }
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY_PRIVATE;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing OpenAI API key" }, { status: 500 });
     }
-    const ttsRes = await fetch("https://api.openai.com/v1/audio/speech", {
+    const ttsRes = await fetch(`${process.env.OPENAI_API_URL}/v1/audio/speech`, {
       
       method: "POST",
       headers: {

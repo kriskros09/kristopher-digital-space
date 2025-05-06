@@ -90,7 +90,6 @@ export async function POST(req: NextRequest) {
         contacts: [
           { name: "LinkedIn", url: links.linkedin },
           { name: "GitHub", url: links.github },
-          { name: "Portfolio", url: links.portfolio }
         ],
         audioUrl: null
       });

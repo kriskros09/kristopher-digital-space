@@ -33,6 +33,7 @@ export default function RootLayout({
         <Toaster />
         <ClientRootProvider>
           {children}
+          <SpeedInsights />
         </ClientRootProvider>
       </body>
     </html>

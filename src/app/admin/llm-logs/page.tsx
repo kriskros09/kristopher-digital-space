@@ -20,14 +20,23 @@ export default function LlmLogsAdminPage() {
   const [routeFilter, setRouteFilter] = useState("");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
+    fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  async function fetchLogs() {
     setLoading(true);
-    fetch("/api/admin/llm-logs")
-      .then(res => res.json())
-      .then(data => setLogs(data.logs || []))
-      .finally(() => setLoading(false));
-  }, []);
+    const res = await fetch(`/api/admin/llm-logs?page=${page}&pageSize=${pageSize}`);
+    const data = await res.json();
+    setLogs(data.logs || []);
+    setTotalCount(data.totalCount || 0);
+    setLoading(false);
+  }
 
   const filteredLogs = logs.filter(log =>
     (!statusFilter || log.status === statusFilter) &&
@@ -47,6 +56,14 @@ export default function LlmLogsAdminPage() {
     a.download = `llm-logs-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function clearAllLogs() {
+    if (!window.confirm("Are you sure you want to delete all logs?")) return;
+    setLoading(true);
+    await fetch("/api/admin/llm-logs", { method: "DELETE" });
+    setPage(1);
+    await fetchLogs();
   }
 
   return (
@@ -73,6 +90,8 @@ export default function LlmLogsAdminPage() {
             className="w-40"
           />
           <Button onClick={downloadLogs} variant="outline">Download JSON</Button>
+          <Button onClick={fetchLogs} variant="secondary">Fetch All Logs</Button>
+          <Button onClick={clearAllLogs} variant="destructive">Clear All</Button>
         </div>
         <LogoutButton />
       </div>
@@ -109,6 +128,11 @@ export default function LlmLogsAdminPage() {
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex justify-end items-center gap-2 mt-2">
+        <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Prev</Button>
+        <span>Page {page} of {Math.max(1, Math.ceil(totalCount / pageSize))}</span>
+        <Button onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= totalCount}>Next</Button>
       </div>
     </div>
   );

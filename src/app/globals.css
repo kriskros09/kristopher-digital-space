@@ -123,27 +123,37 @@
 }
 
 /* Global scrollbar base */
-::-webkit-scrollbar {
+.chat-message-list::-webkit-scrollbar {
   width: 8px;
 }
 
 /* Track with ambient background */
-::-webkit-scrollbar-track {
+.chat-message-list::-webkit-scrollbar-track {
   border-radius: 10px;
 }
 
 /* Glowing, animated scrollbar thumb */
-::-webkit-scrollbar-thumb {
+.chat-message-list::-webkit-scrollbar-thumb {
   background: linear-gradient(45deg, #ff6ec4, #7873f5, #4ade80);
   background-size: 300% 300%;
   border-radius: 50px;
 }
 
+/* Global scrollbar base */
+.project-slider::-webkit-scrollbar {
+  height: 10px;
+}
+
+.project-slider::-webkit-scrollbar-thumb {
+   background: linear-gradient(45deg, #4ade80, #7873f5, #ff6ec4);
+  border-radius: 50px;
+}
+
 .addGlassmorphism {
-background: rgba( 255, 255, 255, 0.1 );
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
+  background: rgba( 255, 255, 255, 0.1 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
 }
 
 .addGlassmorphism-ai {
@@ -230,15 +240,5 @@ backdrop-filter: blur( 4px );
   background:
     linear-gradient(var(--color-neutral-900), var(--color-neutral-900)) padding-box,
     linear-gradient(45deg, #ff6ec4, #7873f5, #4ade80) border-box;
-}
-
-/* Global scrollbar base */
-.project-slider::-webkit-scrollbar {
-  height: 10px;
-}
-
-.project-slider::-webkit-scrollbar-thumb {
-   background: linear-gradient(45deg, #4ade80, #7873f5, #ff6ec4);
-  border-radius: 50px;
 }
 

@@ -31,4 +31,9 @@ export async function getLlmLogs() {
     .limit(100)
   if (error) throw error
   return data
+}
+
+export async function deleteAllLlmLogs() {
+  const { error } = await supabaseServer.from('llm_logs').delete().neq('id', ''); // delete all rows
+  if (error) throw error;
 } 

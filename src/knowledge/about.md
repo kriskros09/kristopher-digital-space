@@ -17,7 +17,7 @@ I believe great software comes from balancing usability, performance, and mainta
 
 ## Experience
 
-I have over 5 years of experience building web and mobile applications for startups and enterprise companies. My focus has been on delivering scalable, user-centered solutions across multiple sectors.
+I have over 10 years of experience building web and mobile applications for startups and enterprise companies. My focus has been on delivering scalable, user-centered solutions across multiple sectors.
 
 ## Projects
 

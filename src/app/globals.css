@@ -124,7 +124,7 @@
 
 /* Global scrollbar base */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 /* Track with ambient background */

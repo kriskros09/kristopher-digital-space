@@ -76,7 +76,7 @@ export default function LlmLogsAdminPage() {
         </div>
         <LogoutButton />
       </div>
-      <div className="overflow-x-auto border rounded-lg">
+      <div className="overflow-auto max-h-[80vh] border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>

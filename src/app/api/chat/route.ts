@@ -3,9 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getKnowledge } from "@/lib/knowledge";
 import { getProjects } from "@/lib/projects";
-import { chatRequestSchema } from "@/lib/validation";
+import { chatRequestSchema } from "@/lib/utils/chatRequestSchema";
 import { logLlmInteraction } from "@/server/lib/llmLogger";
 import { createClient } from '@/lib/supabase/server';
+import { validateRequest } from "@/lib/utils/validateRequest";
+import { checkRateLimit } from "@/lib/utils/rateLimit";
+import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY_PRIVATE,
@@ -21,21 +24,37 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     userId = user?.id;
 
-    const body = await req.json();
-    const parseResult = chatRequestSchema.safeParse(body);
-    if (!parseResult.success) {
+    // --- Rate limiting by IP ---
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rate = await checkRateLimit(ip);
+    if (!rate.success) {
       await logLlmInteraction({
         timestamp,
         user_id: userId,
         route,
-        prompt: JSON.stringify(body) || "",
+        prompt: "",
+        response: "",
+        status: "rate-limit",
+        error: "Too many requests",
+      });
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
+    // --- Input validation with Zod ---
+    const { data: parsed, error: validationError } = await validateRequest<z.infer<typeof chatRequestSchema>>(req, chatRequestSchema);
+    if (validationError) {
+      await logLlmInteraction({
+        timestamp,
+        user_id: userId,
+        route,
+        prompt: JSON.stringify(parsed) || "",
         response: "",
         status: "invalid-request",
-        error: JSON.stringify(parseResult.error),
+        error: JSON.stringify(validationError),
       });
-      return NextResponse.json({ error: "Invalid request", details: parseResult.error }, { status: 400 });
+      return NextResponse.json({ error: "Invalid request", details: validationError }, { status: 400 });
     }
-    const { message, tts } = parseResult.data;
+    const { message, tts } = parsed || {};
 
     const apiKey = process.env.OPENAI_API_KEY_PRIVATE;
     if (!apiKey) {

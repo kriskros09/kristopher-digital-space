@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/twCn";
 import { Loader } from "../feedback/Loader";
 import ReactMarkdown from "react-markdown";
 import { ContactIcons } from "../buttons/ContactIcons";

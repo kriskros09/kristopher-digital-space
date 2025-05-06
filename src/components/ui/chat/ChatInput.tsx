@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, RefObject, useState } from "react";
 import { Textarea } from "@/components/ui/chat/textarea";
 import { Send } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/twCn";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/modals/dialog";
 import { useDispatch } from "react-redux";
 import { clearMessages } from "@/features/aiChat/aiChatSlice";

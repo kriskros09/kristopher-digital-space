@@ -1,5 +1,6 @@
 'use client'
 
+import { ComponentPropsWithoutRef, FormEvent, useState } from 'react'
 import { cn } from '@/lib/utils/twCn'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/common/button'
@@ -13,15 +14,14 @@ import {
 import { Input } from '@/components/ui/common/input'
 import { Label } from '@/components/ui/common/label'
 import Link from 'next/link'
-import { useState } from 'react'
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function ForgotPasswordForm({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleForgotPassword = async (e: FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
     setIsLoading(true)

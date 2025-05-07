@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import { Linkedin, Github, Globe } from "lucide-react";
 
 export function ContactIcons({ contacts }: { contacts: { name: string; url: string }[] }) {
-  const iconMap: Record<string, React.ReactNode> = {
+  const iconMap: Record<string, ReactNode> = {
     LinkedIn: <Linkedin className="w-7 h-7" />,
     GitHub: <Github className="w-7 h-7" />,
     Portfolio: <Globe className="w-7 h-7" />,

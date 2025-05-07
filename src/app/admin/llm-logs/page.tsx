@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/common/button";
 import { Input } from "@/components/ui/common/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/admin/table";
@@ -74,19 +74,19 @@ export default function LlmLogsAdminPage() {
           <Input
             placeholder="Search prompt/response/error..."
             value={search}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             className="w-64"
           />
           <Input
             placeholder="Filter by route"
             value={routeFilter}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRouteFilter(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setRouteFilter(e.target.value)}
             className="w-48"
           />
           <Input
             placeholder="Filter by status"
             value={statusFilter}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStatusFilter(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setStatusFilter(e.target.value)}
             className="w-40"
           />
           <Button onClick={downloadLogs} variant="outline">Download JSON</Button>

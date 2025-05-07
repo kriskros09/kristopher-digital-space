@@ -13,15 +13,15 @@ import {
 import { Input } from '@/components/ui/common/input'
 import { Label } from '@/components/ui/common/label'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { ComponentPropsWithoutRef, FormEvent, useState } from 'react'
 
-export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function UpdatePasswordForm({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleForgotPassword = async (e: FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
     setIsLoading(true)

@@ -1,5 +1,6 @@
 'use client'
 
+import { ComponentPropsWithoutRef, FormEvent, useState } from 'react'
 import { cn } from '@/lib/utils/twCn'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/common/button'
@@ -14,16 +15,15 @@ import { Input } from '@/components/ui/common/input'
 import { Label } from '@/components/ui/common/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function LoginForm({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
     setIsLoading(true)

@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/features/aiChat/aiChatSlice";
 import Image from "next/image";
@@ -7,7 +7,7 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export const ProjectCard = React.memo(function ProjectCard({ project }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({ project }: ProjectCardProps) {
   const router = useRouter();
   const handleMoreDetails = () => {
     router.push(`/projects/${project.slug}`);

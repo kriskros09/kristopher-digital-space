@@ -66,10 +66,102 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Architecture Decisions
 
-- Modular hooks for chat logic (`useAiChat` refactored into smaller hooks).
+- Modular hooks for chat logic (`useAiChat` refactored into smaller hooks for UI wiring and state selection).
+- **Service-based business logic:** All async flows and side effects (e.g., chat, About Me) are handled in dedicated service modules in `/services`, keeping hooks and components clean.
 - Redux Toolkit for state management.
 - Server components and API routes for secure data handling.
 - All sensitive operations (logging, admin data) are server-only.
+- Clear separation of concerns: UI, hooks, services, Redux, and API are modularized for scalability and maintainability.
+
+<details>
+<summary><strong>Project File Structure Overview</strong></summary>
+
+```
+/src
+  /app
+    store.ts                # Redux store configuration
+  /components
+    /ui                     # UI components (buttons, chat, feedback, etc.)
+      ChatInput.tsx
+      ChatMessageList.tsx
+      AiChat.tsx
+      ...
+    /project                # Project-related UI components
+      ProjectDetailsInline.tsx
+      ...
+  /features
+    /aiChat
+      aiChatSlice.ts        # Redux slice for chat state and actions
+      aiChatTypes.ts        # TypeScript types for chat state (if present)
+  /hooks
+    useAiChat.ts            # Main chat logic hook (UI wiring, state selection)
+    useChatScroll.ts        # Custom hook for auto-scrolling chat
+    useAutoResizeTextarea.ts# Custom hook for textarea resizing
+    useChatInput.ts         # Custom hook for chat input logic
+  /knowledge
+    projects.json           # Static knowledge base for projects
+  /lib
+    audio.ts                # Audio playback utilities
+    chatApi.ts              # API calls for chat, TTS, etc.
+    store.ts                # (May be duplicate, check usage)
+  /services
+    aboutMeService.ts       # Business logic for "About Me" chat flow
+    sendMessageService.ts   # Business logic for sending chat messages
+  /server
+    /constants
+      aiPrompts.ts          # System and AI prompt constants
+  /state
+    /aiChat
+      aiChatSlice.ts        # (Legacy, see /features/aiChat)
+      aiChatTypes.ts        # (Legacy, see /features/aiChat)
+  /utils
+    rateLimit.ts            # Rate limiting utilities (if present)
+    validateRequest.ts      # Request validation utilities (if present)
+  /__tests__
+    ...                     # Unit and integration tests
+  /app
+    /api
+      /chat
+        route.ts            # API route for chat
+        route.test.ts       # Tests for chat API route
+    ClientRootProvider.tsx  # Root provider for client-side context
+  constants/
+    aiPrompts.ts            # (May be duplicate, check usage)
+next.config.js              # Next.js configuration
+tailwind.config.js          # Tailwind CSS configuration
+.env, .env.local, etc.      # Environment variables
+README.md                   # Project documentation
+```
+
+</details>
+
+## How to Extend
+
+- **Add a new chat/business flow:**
+  1. Create a new service file in `/src/services` (e.g., `myFeatureService.ts`).
+  2. Implement all async logic and side effects in this service.
+  3. Call the service from your hook (e.g., `useAiChat`) or component.
+
+- **Add a new UI component:**
+  1. Add a new file to `/src/components/ui` or a relevant subfolder.
+  2. Use Tailwind CSS and shadcn/ui for styling and consistency.
+
+- **Add a new Redux slice:**
+  1. Create a new slice in `/src/features` (e.g., `/features/myFeature/myFeatureSlice.ts`).
+  2. Register the slice in the Redux store (`/src/app/store.ts`).
+
+- **Add a new API route:**
+  1. Add a new file to `/src/app/api` (e.g., `/api/my-feature/route.ts`).
+  2. Implement server-side logic and use Supabase or other backends as needed.
+
+- **Add new tests:**
+  1. Place unit and integration tests in `/src/__tests__` or alongside the feature/component.
+
+- **Add new static knowledge/data:**
+  1. Place static JSON or data files in `/src/knowledge`.
+
+- **Add new constants:**
+  1. Place shared constants in `/src/server/constants` or `/src/constants`.
 
 ## References
 

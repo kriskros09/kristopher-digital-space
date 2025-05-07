@@ -135,7 +135,8 @@ README.md                   # Project documentation
 
 </details>
 
-## How to Extend
+<details>
+<summary><strong>How to extend</strong></summary>
 
 - **Add a new chat/business flow:**
   1. Create a new service file in `/src/services` (e.g., `myFeatureService.ts`).
@@ -162,6 +163,8 @@ README.md                   # Project documentation
 
 - **Add new constants:**
   1. Place shared constants in `/src/server/constants` or `/src/constants`.
+
+</details>
 
 ## References
 

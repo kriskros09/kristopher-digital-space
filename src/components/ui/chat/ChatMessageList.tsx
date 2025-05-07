@@ -15,9 +15,11 @@ export interface ChatMessageListProps {
   loading: boolean;
   toggleMessage: (index: number) => void;
   chatEndRef: RefObject<HTMLDivElement>;
+  loaderStep: 'idle' | 'thinking' | 'processing' | 'speaking';
+  onSkip: () => void;
 }
 
-export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, chatEndRef }: ChatMessageListProps) {
+export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, chatEndRef, loaderStep, onSkip }: ChatMessageListProps) {
   // Add a virtual loader message if loading or isSpeaking
   const showLoader = loading || isSpeaking;
   const allMessages = showLoader
@@ -33,6 +35,8 @@ export function ChatMessageList({ messages, isSpeaking, loading, toggleMessage, 
           isMostRecentMessage={i === allMessages.length - 1}
           isSpeaking={isSpeaking}
           isLoader={msg.type === "loader"}
+          loaderStep={msg.type === "loader" ? loaderStep : undefined}
+          onSkip={msg.type === "loader" ? onSkip : undefined}
           onToggle={() => toggleMessage(i)}
           index={i}
         />

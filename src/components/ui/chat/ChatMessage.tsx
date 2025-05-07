@@ -17,15 +17,24 @@ export interface ChatMessageProps {
   isMostRecentMessage: boolean;
   isSpeaking: boolean;
   isLoader?: boolean;
+  loaderStep?: 'idle' | 'thinking' | 'processing' | 'speaking';
   onToggle: () => void;
+  onSkip?: () => void;
   index: number;
 }
 
-export function ChatMessage({ msg, isSpeaking, isLoader, onToggle }: ChatMessageProps) {
+export function ChatMessage({ msg, isLoader, loaderStep = 'thinking', onToggle, onSkip }: ChatMessageProps) {
   if (isLoader) {
+    let loaderText = 'Thinking...';
+    if (loaderStep === 'processing') loaderText = 'Processing...';
+    if (loaderStep === 'speaking') loaderText = 'AI is speaking...';
     return (
-      <div className="flex items-start">
-        <Loader variant={isSpeaking ? "dots" : "spinner"} text={isSpeaking ? "AI is speaking..." : "Thinking..."} />
+      <div className="flex flex-col items-start gap-2">
+        <Loader
+          variant={loaderStep === 'speaking' ? 'dots' : 'spinner'}
+          text={loaderText}
+          onSkip={loaderStep === 'speaking' ? onSkip : undefined}
+        />
       </div>
     );
   }

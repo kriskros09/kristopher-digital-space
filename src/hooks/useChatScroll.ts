@@ -1,6 +1,14 @@
+import { ChatMessage } from "@/features/aiChat/aiChatSlice";
 import { useRef, useCallback, useEffect } from "react";
 
-export function useChatScroll(deps: ReadonlyArray<unknown>) {
+interface ChatScrollProps {
+  messages: ChatMessage[];
+  loading: boolean;
+  welcomeLoading: boolean;
+  isSpeaking: boolean;
+}
+
+export function useChatScroll({messages, loading, welcomeLoading, isSpeaking}: ChatScrollProps) {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToEnd = useCallback(() => {
@@ -9,8 +17,7 @@ export function useChatScroll(deps: ReadonlyArray<unknown>) {
 
   useEffect(() => {
     scrollToEnd();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, scrollToEnd]);
+  }, [messages, loading, welcomeLoading, isSpeaking, scrollToEnd]);
 
   return { chatEndRef, scrollToEnd };
 } 

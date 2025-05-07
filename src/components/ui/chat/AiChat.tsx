@@ -30,31 +30,35 @@ export function AiChat() {
         hasClickedAbout,
         handleProjects,
         hasClickedProjects,
+        loaderStep,
+        skipSpeaking
     } = useAiChat();
 
     return (
         <div className="absolute w-full p-4 space-y-8">
-                <div className="addGlassmorphism rounded-sm">
-                    <ChatMessageList
-                        messages={messages}
-                        isSpeaking={isSpeaking}
-                        loading={loading}
-                        toggleMessage={toggleMessage}
-                        chatEndRef={chatEndRef as RefObject<HTMLDivElement>}
-                    />
-                    <ChatInput
-                        value={value}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        onFocus={handleInputFocus}
-                        onSend={handleSend}
-                        loading={loading}
-                        welcomeLoading={welcomeLoading}
-                        textareaRef={textareaRef as RefObject<HTMLTextAreaElement>}
-                        disabled={loading || welcomeLoading}
-                    />
-                    <ErrorBanner error={error} />
-                </div>
+            <div className="addGlassmorphism rounded-sm">
+                <ChatMessageList
+                    messages={messages}
+                    isSpeaking={isSpeaking}
+                    loading={loading}
+                    toggleMessage={toggleMessage}
+                    chatEndRef={chatEndRef as RefObject<HTMLDivElement>}
+                    loaderStep={loaderStep}
+                    onSkip={skipSpeaking}
+                />
+                <ChatInput
+                    value={value}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleInputFocus}
+                    onSend={handleSend}
+                    loading={loading}
+                    welcomeLoading={welcomeLoading}
+                    textareaRef={textareaRef as RefObject<HTMLTextAreaElement>}
+                    disabled={loading || welcomeLoading}
+                />
+                <ErrorBanner error={error} />
+            </div>
             <div className="flex gap-4 mb-4">
                 <ActionButton icon={<MonitorIcon className="w-5 h-5" />} label="Projects" onClick={handleProjects} disabled={hasClickedProjects} />
                 <ActionButton icon={<CircleUserRound className="w-5 h-5" />} label="About Me" onClick={handleAbout} disabled={hasClickedAbout} />

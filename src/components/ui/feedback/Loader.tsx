@@ -1,9 +1,13 @@
+import { SkipForward } from "lucide-react";
+
 export function Loader({
   text = "Thinking...",
   variant = "spinner",
+  onSkip,
 }: {
   text?: string;
   variant?: "spinner" | "dots";
+  onSkip?: () => void;
 }) {
   if (variant === "dots") {
     return (
@@ -15,6 +19,15 @@ export function Loader({
             <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-200" />
           </div>
           <span className="text-gray-400">{text}</span>
+          {onSkip && (
+            <button
+              className="ml-2 p-1 rounded hover:bg-zinc-700"
+              onClick={onSkip}
+              aria-label="Skip"
+            >
+              <SkipForward className="w-4 h-4 text-white" />
+            </button>
+          )}
         </div>
       </div>
     );
@@ -25,6 +38,15 @@ export function Loader({
       <div className="flex items-center gap-2">
         <span className="w-4 h-4 animate-spin border-2 border-white border-t-transparent rounded-full inline-block" />
         <span>{text}</span>
+        {onSkip && (
+          <button
+            className="ml-2 p-1 rounded hover:bg-zinc-700"
+            onClick={onSkip}
+            aria-label="Skip"
+          >
+            <SkipForward className="w-4 h-4 text-white" />
+          </button>
+        )}
       </div>
     </div>
   );

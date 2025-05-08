@@ -4,14 +4,18 @@ import { RefObject } from "react";
 import {
     MonitorIcon,
     CircleUserRound,
+    BriefcaseIcon,
 } from "lucide-react";
 import { ChatMessageList } from "./ChatMessageList";
 import { ChatInput } from "./ChatInput";
 import { ErrorBanner } from "@/components/ui/feedback/ErrorBanner";
 import { ActionButton } from "@/components/ui/buttons/ActionButton";
 import { useAiChat } from "@/hooks/useAiChat";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 export function AiChat() {
+    const { flags } = useFeatureFlags();
+    console.log("flags", flags.showProjectsButton, flags.showAboutMeButton, flags.showExpertiseButton);
     const {
         value,
         messages,
@@ -60,8 +64,32 @@ export function AiChat() {
                 <ErrorBanner error={error} />
             </div>
             <div className="flex gap-4 mb-4">
-                <ActionButton icon={<MonitorIcon className="w-5 h-5" />} label="Projects" onClick={handleProjects} disabled={hasClickedProjects} />
-                <ActionButton icon={<CircleUserRound className="w-5 h-5" />} label="About Me" onClick={handleAbout} disabled={hasClickedAbout} />
+                {flags.showProjectsButton && (
+                    <ActionButton
+                        icon={<MonitorIcon className="w-5 h-5" />}
+                        label="Projects"
+                        onClick={handleProjects}
+                        disabled={hasClickedProjects}
+                    />
+                )}
+                {flags.showAboutMeButton && (
+                    <ActionButton
+                        icon={<CircleUserRound className="w-5 h-5" />}
+                        label="About Me"
+                        onClick={handleAbout}
+                        disabled={hasClickedAbout}
+                    />
+                )}
+                {flags.showExpertiseButton && (
+                    <ActionButton
+                        icon={<BriefcaseIcon className="w-5 h-5" />}
+                        label="Expertise"
+                        onClick={() => {
+                            console.log("Expertise");
+                        }}
+                        disabled={false}
+                    />
+                )}
             </div>
         </div>
     );

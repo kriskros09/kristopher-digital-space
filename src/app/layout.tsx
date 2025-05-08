@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientRootProvider from "./providers/ClientRootProvider";
 import { Toaster } from "@/components/ui/feedback/sonner";
+import { FeatureFlagHydratorProvider } from './providers/FeatureFlagHydratorProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,10 @@ export default function RootLayout({
       >
         <Toaster />
         <ClientRootProvider>
-          {children}
-          <SpeedInsights />
+          <FeatureFlagHydratorProvider>
+            {children}
+            <SpeedInsights />
+          </FeatureFlagHydratorProvider>
         </ClientRootProvider>
       </body>
     </html>

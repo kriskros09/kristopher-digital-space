@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import aiChatReducer from '../features/aiChat/aiChatSlice';
+import featureFlagsReducer from '../features/featureFlags/featureFlagsSlice';
 import {
   persistReducer,
   persistStore,
@@ -21,6 +22,7 @@ const aiChatPersistConfig = {
 
 const rootReducer = combineReducers({
   aiChat: persistReducer(aiChatPersistConfig, aiChatReducer),
+  featureFlags: featureFlagsReducer,
 });
 
 export const store = configureStore({

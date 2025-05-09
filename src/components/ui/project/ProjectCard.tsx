@@ -9,56 +9,60 @@ interface ProjectCardProps {
 
 export const ProjectCard = memo(function ProjectCard({ project }: ProjectCardProps) {
   const router = useRouter();
-  const handleMoreDetails = () => {
+  const handleReadMore = () => {
     router.push(`/projects/${project.slug}`);
   };
   return (
     <div
-      className={
-        "relative flex flex-col w-64 min-w-[16rem] max-w-xs bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-105"
-      }
+      className="relative w-72 min-w-[18rem] max-w-xs aspect-[3/4] rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-95 bg-black group cursor-pointer"
       tabIndex={0}
       aria-label={`Project: ${project.name}`}
       role="group"
+      onClick={handleReadMore}
+      onKeyDown={handleReadMore}
     >
       {project.image ? (
         <Image
           src={project.image}
           alt={project.name}
-          width={256}
-          height={160}
-          className="h-40 w-full object-cover bg-neutral-200"
-          style={{ objectFit: 'cover', width: '100%', height: '160px' }}
+          fill
+          className="absolute inset-0 w-full h-full object-cover bg-neutral-200"
           priority={false}
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
       ) : (
-        <div className="h-40 w-full flex items-center justify-center bg-neutral-200 text-gray-500 text-lg font-semibold">
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-200 text-gray-500 text-lg font-semibold">
           {project.name}
         </div>
       )}
-      <div className="flex-1 flex flex-col p-4 gap-2">
-        <div className="font-semibold text-lg text-gray-900 truncate" title={project.name}>
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" aria-hidden="true" />
+      {/* Content overlay */}
+      <div className="relative z-10 p-6 flex flex-col h-full justify-end">
+        <h3 className="font-bold text-xl text-white mb-2 drop-shadow-md" title={project.name}>
           {project.name}
-        </div>
-        <div className="text-sm text-gray-600 line-clamp-2" title={project.description}>
+        </h3>
+        <p className="text-white/80 text-sm mb-4 line-clamp-2 drop-shadow-md" title={project.description}>
           {project.description}
-        </div>
-        <div className="flex flex-wrap gap-1 mt-1">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-mono"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-        <button
-          className="mt-3 px-3 py-1.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition"
-          onClick={handleMoreDetails}
+        </p>
+        <a
+          href={`/projects/${project.slug}`}
+          onClick={e => { e.preventDefault(); handleReadMore(); }}
+          className="inline-flex items-center text-white font-medium group/readmore w-fit hover:underline focus:outline-none"
+          tabIndex={-1}
         >
-          More Details
-        </button>
+          Read more
+          <svg
+            className="ml-1 w-4 h-4 transition-transform group-hover/readmore:translate-x-1"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
       </div>
     </div>
   );

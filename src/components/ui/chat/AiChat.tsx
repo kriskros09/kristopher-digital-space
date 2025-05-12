@@ -42,6 +42,10 @@ export function AiChat() {
         skipSpeaking
     } = useAiChat();
 
+    function handleExpertise() {
+        router.push("/expertise");
+    }
+
     function handleDockClick(item: typeof dockNavigationItems[number], idx: number) {
         if (item.title === "Projects") {
             handleProjects();
@@ -52,7 +56,7 @@ export function AiChat() {
             setClickedIdx(idx);
         }
         if (item.title === "Expertise") {
-            router.push("/expertise");
+            handleExpertise();
         };
     }
 
@@ -109,16 +113,14 @@ export function AiChat() {
                         <ActionButton
                             icon={<BriefcaseIcon className="w-5 h-5" />}
                             label="Expertise"
-                            onClick={() => {
-                                console.log("Expertise");
-                            }}
+                            onClick={handleExpertise}
                             disabled={false}
                         />
                     )}
                 </div>
             )}
             {flags.showDockNavigation?.value && (
-                <div className='absolute bottom-20 lg:bottom-10 left-1/2 max-w-full -translate-x-1/2'>
+                <div className='absolute bottom-30 lg:bottom-10 left-1/2 max-w-full -translate-x-1/2'>
                     <Dock className='gradient-border items-end pb-3'>
                         {dockNavigationItems.map((item, idx) => (
                             <DockItem

@@ -7,7 +7,7 @@ export default function Home() {
   const { flags } = useFeatureFlags();
   return (
 
-    <main className="bg-black h-svh flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <main className="bg-black flex flex-col gap-[32px] row-start-2 items-center sm:items-start h-screen">
       {flags.showCpuArchitecture?.value && (
         <CpuArchitecture className="hidden lg:block" />
       )}

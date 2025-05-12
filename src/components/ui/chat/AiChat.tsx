@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useState } from "react";
 import {
     MonitorIcon,
     CircleUserRound,
@@ -12,10 +12,14 @@ import { ErrorBanner } from "@/components/ui/feedback/ErrorBanner";
 import { ActionButton } from "@/components/ui/buttons/ActionButton";
 import { useAiChat } from "@/hooks/useAiChat";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { Dock, DockItem, DockLabel, DockIcon } from "@/components/ui/dock";
+import { dockNavigationItems } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 export function AiChat() {
     const { flags } = useFeatureFlags();
-    console.log("flags", flags.showProjectsButton, flags.showAboutMeButton, flags.showExpertiseButton);
+    const [setClickedIdx] = useState<number | null>(null);
+    const router = useRouter();
     const {
         value,
         messages,
@@ -38,8 +42,28 @@ export function AiChat() {
         skipSpeaking
     } = useAiChat();
 
+    function handleDockClick(item: typeof dockNavigationItems[number], idx: number) {
+        if (item.title === "Projects") {
+            handleProjects();
+            setClickedIdx(idx);
+        }
+        if (item.title === "About me") {
+            handleAbout();
+            setClickedIdx(idx);
+        }
+        if (item.title === "Expertise") {
+            router.push("/expertise");
+        };
+    }
+
+    function isDockItemDisabled(item: typeof dockNavigationItems[number]) {
+        if (item.title === "Projects") return hasClickedProjects;
+        if (item.title === "About me") return hasClickedAbout;
+        return false;
+    }
+
     return (
-        <div className="absolute w-full p-4 space-y-8">
+        <div className={`${flags.showCpuArchitecture?.value ? 'absolute' : ''} w-full p-4 space-y-8`}>
             <div className="addGlassmorphism rounded-sm">
                 <ChatMessageList
                     messages={messages}
@@ -63,34 +87,53 @@ export function AiChat() {
                 />
                 <ErrorBanner error={error} />
             </div>
-            <div className="flex gap-4 mb-4">
-                {flags.showProjectsButton && (
-                    <ActionButton
-                        icon={<MonitorIcon className="w-5 h-5" />}
-                        label="Projects"
-                        onClick={handleProjects}
-                        disabled={hasClickedProjects}
-                    />
-                )}
-                {flags.showAboutMeButton && (
-                    <ActionButton
-                        icon={<CircleUserRound className="w-5 h-5" />}
-                        label="About Me"
-                        onClick={handleAbout}
-                        disabled={hasClickedAbout}
-                    />
-                )}
-                {flags.showExpertiseButton && (
-                    <ActionButton
-                        icon={<BriefcaseIcon className="w-5 h-5" />}
-                        label="Expertise"
-                        onClick={() => {
-                            console.log("Expertise");
-                        }}
-                        disabled={false}
-                    />
-                )}
-            </div>
+            {flags.showButtonNavigation?.value && (
+                <div className="flex gap-4 mb-4">
+                    {flags.showProjectsButton?.value && (
+                        <ActionButton
+                            icon={<MonitorIcon className="w-5 h-5" />}
+                            label="Projects"
+                            onClick={handleProjects}
+                            disabled={hasClickedProjects}
+                        />
+                    )}
+                    {flags.showAboutMeButton?.value && (
+                        <ActionButton
+                            icon={<CircleUserRound className="w-5 h-5" />}
+                            label="About Me"
+                            onClick={handleAbout}
+                            disabled={hasClickedAbout}
+                        />
+                    )}
+                    {flags.showExpertiseButton?.value && (
+                        <ActionButton
+                            icon={<BriefcaseIcon className="w-5 h-5" />}
+                            label="Expertise"
+                            onClick={() => {
+                                console.log("Expertise");
+                            }}
+                            disabled={false}
+                        />
+                    )}
+                </div>
+            )}
+            {flags.showDockNavigation?.value && (
+                <div className='absolute bottom-20 lg:bottom-10 left-1/2 max-w-full -translate-x-1/2'>
+                    <Dock className='gradient-border items-end pb-3'>
+                        {dockNavigationItems.map((item, idx) => (
+                            <DockItem
+                                key={idx}
+                                className="aspect-square rounded-full bg-neutral-800"
+                                onClick={() => handleDockClick(item, idx)}
+                                disabled={isDockItemDisabled(item)}
+                            >
+                                <DockLabel className='text-white bg-neutral-800 border-none'>{item.title}</DockLabel>
+                                <DockIcon>{item.icon}</DockIcon>
+                            </DockItem>
+                        ))}
+                    </Dock>
+                </div>
+            )}
         </div>
     );
 }

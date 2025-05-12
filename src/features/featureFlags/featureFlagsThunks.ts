@@ -8,7 +8,9 @@ export const fetchFeatureFlags = createAsyncThunk(
     const res = await fetch('/api/feature-flags');
     const data = await res.json();
     if (Array.isArray(data)) {
-      const backendFlags = Object.fromEntries(data.map((f) => [f.key, f.value]));
+      const backendFlags = Object.fromEntries(
+        data.map((f) => [f.key, { value: f.value, description: f.description }])
+      );
       dispatch(setAllFlags(backendFlags));
     }
   }
@@ -23,5 +25,45 @@ export const updateFeatureFlag = createAsyncThunk(
       body: JSON.stringify({ key, value }),
     });
     dispatch(setFlag({ key, value }));
+  }
+);
+
+export const addFeatureFlag = createAsyncThunk(
+  'featureFlags/add',
+  async (
+    { key, description }: { key: FeatureFlagKey; description?: string },
+    { dispatch }
+  ) => {
+    await fetch('/api/feature-flags', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, value: false, description }),
+    });
+    dispatch(setFlag({ key, value: false, description }));
+  }
+);
+
+export const removeFeatureFlag = createAsyncThunk(
+  'featureFlags/remove',
+  async (key: FeatureFlagKey, { dispatch }) => {
+    await fetch(`/api/feature-flags?key=${encodeURIComponent(key)}`, {
+      method: 'DELETE',
+    });
+    dispatch(setFlag({ key, value: undefined, description: undefined }));
+  }
+);
+
+export const editFeatureFlagDescription = createAsyncThunk(
+  'featureFlags/editDescription',
+  async (
+    { key, description }: { key: FeatureFlagKey; description: string },
+    { dispatch }
+  ) => {
+    await fetch('/api/feature-flags', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, description }),
+    });
+    dispatch(setFlag({ key, description }));
   }
 ); 

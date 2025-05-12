@@ -11,7 +11,7 @@ import {
   resetValue,
   setHasVisited,
   setLoaderStep,
-  setHasClickedProjects
+  setHasClickedProjects,
 } from "@/features/aiChat/aiChatSlice";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import { AI_VOICE_GREETING_INSTRUCTIONS } from "@/server/constants/aiPrompts";

@@ -9,17 +9,17 @@ import {
   type SpringOptions,
   AnimatePresence,
 } from 'framer-motion';
-import {
+import React, {
   Children,
   cloneElement,
   createContext,
-  ReactElement,
   ReactNode,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
+  isValidElement,
 } from 'react';
 import { cn } from '@/lib/utils/twCn';
 
@@ -45,10 +45,12 @@ type DockItemProps = {
 type DockLabelProps = {
   className?: string;
   children: ReactNode;
+  isHovered?: MotionValue<number>;
 };
 type DockIconProps = {
   className?: string;
   children: ReactNode;
+  width?: MotionValue<number>;
 };
 
 type DocContextType = {
@@ -165,19 +167,26 @@ function DockItem({ children, className, onClick, disabled }: DockItemProps) {
       aria-haspopup='true'
       onClick={onClick}
     >
-      {Children.map(children, (child) =>
-        cloneElement(child as ReactElement, { width, isHovered })
-      )}
+      {Children.map(children, (child) => {
+        if (!isValidElement(child)) return child;
+        if (typeof child.type === 'string') return child;
+        if (isDockLabel(child)) {
+          return cloneElement(child, { isHovered });
+        }
+        if (isDockIcon(child)) {
+          return cloneElement(child, { width });
+        }
+        return child;
+      })}
     </motion.div>
   );
 }
 
-function DockLabel({ children, className, ...rest }: DockLabelProps) {
-  const restProps = rest as Record<string, unknown>;
-  const isHovered = restProps['isHovered'] as MotionValue<number>;
+function DockLabel({ children, className, isHovered }: DockLabelProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!isHovered) return;
     const unsubscribe = isHovered.on('change', (latest) => {
       setIsVisible(latest === 1);
     });
@@ -207,11 +216,10 @@ function DockLabel({ children, className, ...rest }: DockLabelProps) {
   );
 }
 
-function DockIcon({ children, className, ...rest }: DockIconProps) {
-  const restProps = rest as Record<string, unknown>;
-  const width = restProps['width'] as MotionValue<number>;
-
-  const widthTransform = useTransform(width, (val) => val / 2);
+function DockIcon({ children, className, width }: DockIconProps) {
+  const defaultWidth = useMotionValue(40);
+  const widthToUse = width ?? defaultWidth;
+  const widthTransform = useTransform(widthToUse, (val: number) => val / 2);
 
   return (
     <motion.div
@@ -222,5 +230,23 @@ function DockIcon({ children, className, ...rest }: DockIconProps) {
     </motion.div>
   );
 }
+
+function isDockLabel(element: React.ReactElement): element is React.ReactElement<DockLabelProps> {
+  return (
+    typeof element.type !== 'string' &&
+    // @ts-expect-error: displayName is not typed on function components
+    element.type.displayName === 'DockLabel'
+  );
+}
+function isDockIcon(element: React.ReactElement): element is React.ReactElement<DockIconProps> {
+  return (
+    typeof element.type !== 'string' &&
+    // @ts-expect-error: displayName is not typed on function components
+    element.type.displayName === 'DockIcon'
+  );
+}
+
+DockLabel.displayName = 'DockLabel';
+DockIcon.displayName = 'DockIcon';
 
 export { Dock, DockIcon, DockItem, DockLabel };

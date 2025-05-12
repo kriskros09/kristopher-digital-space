@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export function AiChat() {
     const { flags } = useFeatureFlags();
-    const [setClickedIdx] = useState<number | null>(null);
+    const [, setClickedIdx] = useState<number | null>(null);
     const router = useRouter();
     const {
         value,

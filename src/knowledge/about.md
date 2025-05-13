@@ -44,6 +44,11 @@ I’m fluent in French, English, and Spanish. Outside of work, I’m passionate 
 
 I like to start with clear goals and iterate quickly. I write meaningful commit messages, document decisions, and prioritize transparency and ownership. I thrive in collaborative environments with a shared sense of purpose.
 
+## Open to New Opportunities
+
+I'm currently looking for new and exciting opportunities, whether as a full-time team member or in a part-time consulting capacity.  
+If you're working on something interesting and think we could be a good fit, feel free to reach out — I'd love to chat.
+
 ## Contact
 
 Feel free to reach out through my social links to discuss potential collaborations!

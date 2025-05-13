@@ -48,6 +48,8 @@ export function useAiChat() {
     dispatch(setIsSpeaking(false));
     dispatch(setLoading(false));
     dispatch(setLoaderStep('idle'));
+    dispatch(setWelcomeLoading(false));
+    dispatch(setHasVisited(true));
   }, [dispatch]);
 
   // Handler for About button
@@ -72,16 +74,52 @@ export function useAiChat() {
     if (!state.voiceReady && !state.hasVisited) {
       dispatch(setVoiceReady(true));
       dispatch(setWelcomeLoading(true));
-      dispatch(setIsSpeaking(true));
+      dispatch(setLoading(true));
+      dispatch(setLoaderStep('thinking'));
+      dispatch(setIsSpeaking(false));
+      
+      let processingTimeout: NodeJS.Timeout | null = null;
+      let finished = false;
+
+      // After 2 seconds, if not finished, show 'Processing...'
+      processingTimeout = setTimeout(() => {
+        if (!finished) {
+          dispatch(setLoaderStep('processing'));
+        }
+      }, 2000);
+
       try {
         const data = await fetchTTS(AI_VOICE_GREETING_INSTRUCTIONS);
+        
         if (data.audioUrl) {
+          finished = true;
+          if (processingTimeout) clearTimeout(processingTimeout);
+          dispatch(setLoaderStep('speaking'));
+          dispatch(setIsSpeaking(true));
           playAudio(data.audioUrl, {
-            onEnd: () => dispatch(setIsSpeaking(false)),
+            onEnd: () => {
+              dispatch(setIsSpeaking(false));
+              dispatch(setLoading(false));
+              dispatch(setWelcomeLoading(false));
+              dispatch(setLoaderStep('idle'));
+              dispatch(setHasVisited(true));
+            },
           });
+        } else {
+          // If no audio, finish loading
+          finished = true;
+          if (processingTimeout) clearTimeout(processingTimeout);
+          dispatch(setLoading(false));
+          dispatch(setWelcomeLoading(false));
+          dispatch(setLoaderStep('idle'));
+          dispatch(setHasVisited(true));
         }
-      } finally {
+      } catch {
+        finished = true;
+        if (processingTimeout) clearTimeout(processingTimeout);
+        dispatch(setLoading(false));
         dispatch(setWelcomeLoading(false));
+        dispatch(setLoaderStep('idle'));
         dispatch(setHasVisited(true));
       }
     }

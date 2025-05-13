@@ -6,10 +6,10 @@ Hi! I'm a Fullstack software developer passionate about building great user expe
 
 - **Frontend Development**: React, Next.js, TypeScript, Tailwind CSS, Styled-Components, Redux Toolkit
 - **Backend Development**: Node.js, Express, PostgreSQL, GraphQL, Apollo
-- **Mobile & Native**: React Native, Expo, Metamask integration
-- **Cloud & DevOps**: AWS, Docker, CI/CD, Webpack
+- **Mobile**: React Native, Expo, Metamask integration
+- **Cloud & DevOps**: AWS, Docker, CI/CD
 - **AI/ML**: OpenAI API integration, LangChain, Vector Databases
-- **Other Tools**: NextAuth.js, Three.js, GitHub Actions, Firebase
+- **Other Tools**: NextAuth.js, Three.js, GitHub Actions
 
 ## My Development Philosophy
 
@@ -25,13 +25,12 @@ Some notable projects I've worked on:
 
 - AI-powered chatbot using OpenAI and LangChain
 - Real-time collaboration platform using WebSocket
-- E-commerce platform with Next.js and Stripe
 - Mobile app with React Native and Expo
 - Authentication systems with Metamask and NextAuth.js
 
-## Collaboration
+## Team work
 
-I'm proactive in team settings and contribute to architecture decisions, code reviews, and onboarding. I value clean, async-friendly communication and enjoy mentoring and pair programming when needed.
+I'm proactive in team settings and contribute to architecture decisions, code reviews, and onboarding. I value clean, async-friendly communication.
 
 ## Continuous Learning
 

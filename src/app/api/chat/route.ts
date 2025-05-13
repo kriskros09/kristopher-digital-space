@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
     const lowerMsg = (message || "").toLowerCase();
     const isContactQuestion = CONTACT_KEYWORDS.some(k => lowerMsg.includes(k));
     const isProjectQuestion = PROJECT_KEYWORDS.some(k => lowerMsg.includes(k));
+    const SHOW_PROJECT_SLIDER = false; // Set to false to disable the project slider ( temporary fix )
 
     if (isContactQuestion) {
       const { links } = await getKnowledge();
@@ -95,35 +96,37 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    if (isProjectQuestion) {
-      // Return special project-list message
-      try {
-        const projects = await getProjects();
-        await logLlmInteraction({
-          timestamp,
-          user_id: userId,
-          route,
-          prompt: message || "",
-          response: JSON.stringify({ type: "project-list", projects }) || "",
-          status: "success",
-        });
-        return NextResponse.json({
-          aiMessage: null,
-          type: "project-list",
-          projects,
-          audioUrl: null
-        });
-      } catch (err) {
-        await logLlmInteraction({
-          timestamp,
-          user_id: userId,
-          route,
-          prompt: message || "",
-          response: "",
-          status: "error",
-          error: err instanceof Error ? err.message : String(err),
-        });
-        return NextResponse.json({ error: "Failed to load projects", details: err }, { status: 500 });
+    if (SHOW_PROJECT_SLIDER) {
+      if (isProjectQuestion) {
+        // Return special project-list message
+        try {
+          const projects = await getProjects();
+          await logLlmInteraction({
+            timestamp,
+            user_id: userId,
+            route,
+            prompt: message || "",
+            response: JSON.stringify({ type: "project-list", projects }) || "",
+            status: "success",
+          });
+          return NextResponse.json({
+            aiMessage: null,
+            type: "project-list",
+            projects,
+            audioUrl: null
+          });
+        } catch (err) {
+          await logLlmInteraction({
+            timestamp,
+            user_id: userId,
+            route,
+            prompt: message || "",
+            response: "",
+            status: "error",
+            error: err instanceof Error ? err.message : String(err),
+          });
+          return NextResponse.json({ error: "Failed to load projects", details: err }, { status: 500 });
+        }
       }
     }
 

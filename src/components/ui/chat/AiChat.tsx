@@ -92,7 +92,7 @@ export function AiChat() {
                 <ErrorBanner error={error} />
             </div>
             {flags.showButtonNavigation?.value && (
-                <div className="flex gap-4 mb-4">
+                <div className="flex gap-4 mb-4 justify-center">
                     {flags.showProjectsButton?.value && (
                         <ActionButton
                             icon={<MonitorIcon className="w-5 h-5" />}

@@ -5,6 +5,7 @@ export const featureFlagKeys = [
   'showCpuArchitecture',
   'showDockNavigation',
   'showButtonNavigation',
+  'showProjectSlider',
   // Add more flags as needed
 ] as const;
 export type FeatureFlagKey = typeof featureFlagKeys[number]; 

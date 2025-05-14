@@ -34,6 +34,10 @@ export async function getLlmLogs() {
 }
 
 export async function deleteAllLlmLogs() {
-  const { error } = await supabaseServer.from('llm_logs').delete().neq('id', ''); // delete all rows
-  if (error) throw error;
+  const { data, error } = await supabaseServer.from('llm_logs').delete().not('id', 'is', null); // delete all rows
+  if (error) {
+    console.error('Delete error:', error);
+    throw error;
+  }
+  console.log('Deleted rows:', data);
 } 

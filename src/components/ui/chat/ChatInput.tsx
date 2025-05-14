@@ -50,7 +50,7 @@ export function ChatInput({
         onChange={onChange}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
-        placeholder="Ask me a question..."
+        placeholder="Ask me a question about Kristopher ..."
         className={cn(
           "w-full px-4 py-3",
           "resize-none",

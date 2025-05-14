@@ -32,6 +32,23 @@ Some notable projects I've worked on:
 
 I'm proactive in team settings and contribute to architecture decisions, code reviews, and onboarding. I value clean, async-friendly communication.
 
+## What I Look For in a Team
+
+I’m drawn to projects with a strong sense of purpose, a product-first mindset, and teams that value clarity, autonomy, and thoughtful code. Whether the pace is fast or methodical, I enjoy working with people who care about both the user and the craft.
+
+## What You Can Expect Working With Me
+
+- Reliable and responsive communication
+- Thoughtful feedback in code reviews
+- Attention to detail without losing sight of the big picture
+- Pragmatism when choosing tools or architectures
+- Respect for timelines and commitments
+
+## Availability
+
+Open to part-time or full-time roles (remote-first preferred). I’m currently available for new engagements and happy to explore flexible or project-based collaborations.
+
+
 ## Continuous Learning
 
 I’m always exploring new tools and approaches. Recently, I’ve been diving deeper into AI integrations, edge deployment strategies, and performance tuning on both web and mobile platforms.

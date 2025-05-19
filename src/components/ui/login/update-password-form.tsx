@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils/twCn'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/common/button'
 import {
   Card,
@@ -23,7 +23,6 @@ export function UpdatePasswordForm({ className, ...props }: ComponentPropsWithou
 
   const handleForgotPassword = async (e: FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 

@@ -2,7 +2,7 @@
 
 import { ComponentPropsWithoutRef, FormEvent, useState } from 'react'
 import { cn } from '@/lib/utils/twCn'
-import { createClient } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/common/button'
 import {
   Card,
@@ -25,7 +25,6 @@ export function LoginForm({ className, ...props }: ComponentPropsWithoutRef<'div
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 

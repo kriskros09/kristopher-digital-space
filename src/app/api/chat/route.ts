@@ -5,7 +5,7 @@ import { getKnowledge } from "@/lib/knowledge";
 import { getProjects } from "@/lib/projects";
 import { chatRequestSchema } from "@/lib/utils/chatRequestSchema";
 import { logLlmInteraction } from "@/server/lib/llmLogger";
-import { createClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { validateRequest } from "@/lib/utils/validateRequest";
 import { checkRateLimit } from "@/lib/utils/rateLimit";
 import { z } from "zod";
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   let userId: string | undefined = undefined;
   try {
     // Get Supabase user
-    const supabase = await createClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     userId = user?.id;
 

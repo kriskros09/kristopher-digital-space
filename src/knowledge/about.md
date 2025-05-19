@@ -19,6 +19,12 @@ I believe great software comes from balancing usability, performance, and mainta
 
 I have over 10 years of experience building web and mobile applications for startups and enterprise companies. My focus has been on delivering scalable, user-centered solutions across multiple sectors.
 
+## Shopify Experience
+
+I've worked extensively with the Shopify platform, both on the backend and frontend. I'm familiar with the full suite of Shopify APIs including Storefront API, Admin API, and the REST and GraphQL endpoints and have used them to build custom storefronts, manage product data, and create tailored checkout experiences.
+
+I'm also experienced with Shopify's UI extension framework, and have built custom apps and components for Shopify Checkout and Shopify POS (Point of Sale). These tools have allowed me to deliver seamless, integrated experiences for merchants and their customers, while adhering to Shopify’s performance and UX standards.
+
 ## Projects
 
 Some notable projects I've worked on:

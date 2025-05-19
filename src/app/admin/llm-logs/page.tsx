@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/common/button";
 import { Input } from "@/components/ui/common/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/admin/table";
 import { LogoutButton } from "@/components/ui/login/logout-button";
+import { useSupabaseUserInfo } from '@/hooks/useSupabaseUserInfo';
+
 interface LlmLogEntry {
   timestamp: string;
   userId?: string;
@@ -15,6 +17,7 @@ interface LlmLogEntry {
 }
 
 export default function LlmLogsAdminPage() {
+  const user = useSupabaseUserInfo();
   const [logs, setLogs] = useState<LlmLogEntry[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [routeFilter, setRouteFilter] = useState("");
@@ -69,6 +72,9 @@ export default function LlmLogsAdminPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">LLM Logs Admin</h1>
+      <div className="mb-2 text-sm text-muted-foreground">
+        Logged in as: <b>{user.name || 'User'}</b> ({user.email})
+      </div>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex flex-wrap gap-2">
           <Input

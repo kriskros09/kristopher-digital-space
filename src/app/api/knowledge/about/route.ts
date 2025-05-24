@@ -6,14 +6,25 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 async function getUserId() {
   const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error && error.status === 400 && error.code === 'refresh_token_not_found') {
+      return undefined;
+    }
+    return user?.id;
+  } catch (err) {
+    console.error("[api/knowledge/about][getUserId] Failed to get user ID:", err);
+    return undefined;
+  }
 }
 
 export async function GET() {
   const route = "/api/knowledge/about";
   const timestamp = new Date().toISOString();
   const userId = await getUserId();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const aboutPath = path.join(process.cwd(), "src/knowledge/about.md");
     const linksPath = path.join(process.cwd(), "src/knowledge/links.json");

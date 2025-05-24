@@ -21,7 +21,10 @@ export async function POST(req: NextRequest) {
   try {
     // Get Supabase user
     const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error && error.status === 400 && error.code === 'refresh_token_not_found') {
+      return new Response('Unauthorized', { status: 401 });
+    }
     userId = user?.id;
 
     // --- Rate limiting by IP ---

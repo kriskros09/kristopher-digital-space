@@ -73,7 +73,7 @@ export default function LlmLogsAdminPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">LLM Logs Admin</h1>
       <div className="mb-2 text-sm text-muted-foreground">
-        Logged in as: <b>{user.name || 'User'}</b> ({user.email})
+        Logged in as: <b>{user?.name || 'User'}</b> ({user?.email || 'unknown'})
       </div>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex flex-wrap gap-2">

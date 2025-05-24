@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AI_VOICE_INSTRUCTIONS } from "@/server/constants/aiPrompts";
 import { logLlmInteraction } from "@/server/lib/llmLogger";
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getUserIdSafe } from '@/lib/supabase/getUserId';
 
-async function getUserId() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
-}
+
 
 export async function POST(req: NextRequest) {
   const route = "/api/tts";
   const timestamp = new Date().toISOString();
-  const userId = await getUserId();
+  const userId = await getUserIdSafe();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const { text } = await req.json();
     if (!text || typeof text !== "string") {
@@ -79,6 +78,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({ audioUrl });
   } catch (err) {
+    console.error("[api/tts][POST] Unexpected error:", err);
     const errorMsg = err instanceof Error ? err.message : String(err);
     await logLlmInteraction({
       timestamp: new Date().toISOString(),
